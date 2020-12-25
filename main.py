@@ -62,6 +62,8 @@ class main(QtWidgets.QMainWindow):
         self.ui.download_python.setVisible(False)
         self.ui.progress_bar.reset()
         self.ui.progress_bar.setVisible(False)
+        self.ui.custom_source_loc.setVisible(False)
+        self.ui.source_button.setVisible(False)
         self.ui.step_3.setVisible(False)
         self.ui.destination_loc.setVisible(False)
         self.ui.save_as.setVisible(False)
@@ -86,6 +88,7 @@ class main(QtWidgets.QMainWindow):
 
         self.ui.open_pyc_file.clicked.connect(self.open_pyc)
         self.ui.python_source.currentIndexChanged.connect(self.py_source_changed)
+        self.ui.source_button.clicked.connect(self.get_custom_pysource)
         self.ui.save_as.clicked.connect(self.save_file)
         self.ui.download_python.clicked.connect(self.down_then_extract)
         self.ui.advanced.clicked.connect(self.advanced_vis)
@@ -200,7 +203,9 @@ It will look for previous downloads if any""")
                 self.ui.step_2.setVisible(True)
                 self.ui.python_source.setVisible(True)
         elif(self.ui.python_source.currentIndex() == 3):
-            pass
+            self.ensure_disabled()
+            self.ui.source_button.setVisible(True)
+            self.ui.custom_source_loc.setVisible(True)
 
     def open_pyc(self):
         self.ensure_disabled()
@@ -334,7 +339,8 @@ support the version used for the pyc""")
 
     def check_py_v(self, python_folder):
         self.ui.console_output.append("\nChecking Python interpreter version")
-        check = subprocess.Popen(os.path.join(python_folder, "python") +
+
+        check = subprocess.Popen(f'''"{os.path.join(python_folder, 'python')}"''' +
                                  ' -c "import platform;\
                                print(platform.python_version())"',
                                  shell=True,
@@ -343,6 +349,7 @@ support the version used for the pyc""")
         self.custom_py_v, err = check.communicate()
 
         if(err):
+            print(err)
             self.ui.console_output.append("\nFolder doesn't contain Python")
         else:
             self.custom_py_v = self.custom_py_v.strip().decode("utf-8")[0:3]
@@ -358,7 +365,7 @@ Proceed to Step 3""")
                 self.ui.save_as.setVisible(True)
             else:
                 self.ui.console_output.append("""\nPython interpreter version\
-does not matches pyc bytecode version.
+ does not matches pyc bytecode version.
 Use another Python source""")
 
     def save_file(self):
@@ -374,6 +381,19 @@ Use another Python source""")
                 self.ui.uncompyle_button.setVisible(True)
                 self.ui.console_output.append("\nPress Uncompyle!")
 
+        except FileNotFoundError:
+            pass
+    def get_custom_pysource(self):
+        try:
+            self.custom_source = QtWidgets.QFileDialog.getOpenFileName(
+                self, "Custom Python Source",filter="python*")[0]
+
+            if(not self.custom_source):
+                raise FileNotFoundError
+            else:
+                self.custom_source = os.path.dirname(self.custom_source)
+                print(self.custom_source)
+                self.check_py_v(self.custom_source)
         except FileNotFoundError:
             pass
 
