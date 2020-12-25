@@ -26,8 +26,8 @@ class Ui_MainWindow(object):
         self.centralwidget.setObjectName(u"centralwidget")
         self.horizontalLayout_8 = QHBoxLayout(self.centralwidget)
         self.horizontalLayout_8.setObjectName(u"horizontalLayout_8")
-        self.verticalLayout_4 = QVBoxLayout()
-        self.verticalLayout_4.setObjectName(u"verticalLayout_4")
+        self.verticalLayout_3 = QVBoxLayout()
+        self.verticalLayout_3.setObjectName(u"verticalLayout_3")
         self.heading = QLabel(self.centralwidget)
         self.heading.setObjectName(u"heading")
         font1 = QFont()
@@ -36,7 +36,7 @@ class Ui_MainWindow(object):
         self.heading.setFont(font1)
         self.heading.setAlignment(Qt.AlignCenter)
 
-        self.verticalLayout_4.addWidget(self.heading)
+        self.verticalLayout_3.addWidget(self.heading)
 
         self.formLayout = QFormLayout()
         self.formLayout.setObjectName(u"formLayout")
@@ -108,6 +108,21 @@ class Ui_MainWindow(object):
 
         self.verticalLayout.addLayout(self.horizontalLayout)
 
+        self.horizontalLayout_6 = QHBoxLayout()
+        self.horizontalLayout_6.setObjectName(u"horizontalLayout_6")
+        self.custom_source_loc = QLineEdit(self.centralwidget)
+        self.custom_source_loc.setObjectName(u"custom_source_loc")
+
+        self.horizontalLayout_6.addWidget(self.custom_source_loc)
+
+        self.source_button = QPushButton(self.centralwidget)
+        self.source_button.setObjectName(u"source_button")
+
+        self.horizontalLayout_6.addWidget(self.source_button)
+
+
+        self.verticalLayout.addLayout(self.horizontalLayout_6)
+
 
         self.formLayout.setLayout(1, QFormLayout.FieldRole, self.verticalLayout)
 
@@ -118,8 +133,6 @@ class Ui_MainWindow(object):
 
         self.formLayout.setWidget(2, QFormLayout.LabelRole, self.step_3)
 
-        self.verticalLayout_3 = QVBoxLayout()
-        self.verticalLayout_3.setObjectName(u"verticalLayout_3")
         self.horizontalLayout_3 = QHBoxLayout()
         self.horizontalLayout_3.setObjectName(u"horizontalLayout_3")
         self.destination_loc = QLineEdit(self.centralwidget)
@@ -137,28 +150,10 @@ class Ui_MainWindow(object):
         self.horizontalLayout_3.addWidget(self.save_as)
 
 
-        self.verticalLayout_3.addLayout(self.horizontalLayout_3)
-
-        self.horizontalLayout_6 = QHBoxLayout()
-        self.horizontalLayout_6.setObjectName(u"horizontalLayout_6")
-        self.custom_source_loc = QLineEdit(self.centralwidget)
-        self.custom_source_loc.setObjectName(u"custom_source_loc")
-
-        self.horizontalLayout_6.addWidget(self.custom_source_loc)
-
-        self.source_button = QPushButton(self.centralwidget)
-        self.source_button.setObjectName(u"source_button")
-
-        self.horizontalLayout_6.addWidget(self.source_button)
+        self.formLayout.setLayout(2, QFormLayout.FieldRole, self.horizontalLayout_3)
 
 
-        self.verticalLayout_3.addLayout(self.horizontalLayout_6)
-
-
-        self.formLayout.setLayout(2, QFormLayout.FieldRole, self.verticalLayout_3)
-
-
-        self.verticalLayout_4.addLayout(self.formLayout)
+        self.verticalLayout_3.addLayout(self.formLayout)
 
         self.advanced_container = QVBoxLayout()
         self.advanced_container.setObjectName(u"advanced_container")
@@ -220,7 +215,7 @@ class Ui_MainWindow(object):
         self.advanced_container.addWidget(self.widget)
 
 
-        self.verticalLayout_4.addLayout(self.advanced_container)
+        self.verticalLayout_3.addLayout(self.advanced_container)
 
         self.horizontalLayout_7 = QHBoxLayout()
         self.horizontalLayout_7.setObjectName(u"horizontalLayout_7")
@@ -240,10 +235,10 @@ class Ui_MainWindow(object):
         self.horizontalLayout_7.addItem(self.space_right_uncompyle)
 
 
-        self.verticalLayout_4.addLayout(self.horizontalLayout_7)
+        self.verticalLayout_3.addLayout(self.horizontalLayout_7)
 
 
-        self.horizontalLayout_8.addLayout(self.verticalLayout_4)
+        self.horizontalLayout_8.addLayout(self.verticalLayout_3)
 
         self.console_output = QTextEdit(self.centralwidget)
         self.console_output.setObjectName(u"console_output")
@@ -286,10 +281,10 @@ class Ui_MainWindow(object):
         self.python_source.setItemText(3, QCoreApplication.translate("MainWindow", u"Custom source (advanced)", None))
 
         self.download_python.setText(QCoreApplication.translate("MainWindow", u"Download", None))
+        self.source_button.setText(QCoreApplication.translate("MainWindow", u"Python Source", None))
         self.step_3.setText(QCoreApplication.translate("MainWindow", u"Step 3", None))
         self.destination_loc.setText(QCoreApplication.translate("MainWindow", u"Destination file", None))
         self.save_as.setText(QCoreApplication.translate("MainWindow", u"Save in folder", None))
-        self.source_button.setText(QCoreApplication.translate("MainWindow", u"Python Source", None))
         self.advanced.setText(QCoreApplication.translate("MainWindow", u"Advanced \u25b6", None))
         self.uncompyle_tool_label.setText(QCoreApplication.translate("MainWindow", u"Uncompile tool", None))
         self.uncompyle_tools.setItemText(0, QCoreApplication.translate("MainWindow", u"rocky/uncompyle6 (1.0-3.8) (default)", None))

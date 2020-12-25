@@ -16,7 +16,7 @@ import py_source
 import platform
 from zipfile import ZipFile
 import os
-from urllib.request import urlretrieve
+import urllib
 import time
 
 bundled_PyVersion = platform.python_version()
@@ -188,6 +188,9 @@ It will look for previous downloads if any""")
 
     def py_source_changed(self):
         if(self.ui.python_source.currentIndex() == 0):
+            self.ensure_disabled()
+            self.ui.step_2.setVisible(True)
+            self.ui.python_source.setVisible(True)
             self.ui.download_python.setVisible(True)
             self.ui.progress_bar.setVisible(True)
         elif(self.ui.python_source.currentIndex() == 1):
@@ -204,6 +207,8 @@ It will look for previous downloads if any""")
                 self.ui.python_source.setVisible(True)
         elif(self.ui.python_source.currentIndex() == 3):
             self.ensure_disabled()
+            self.ui.step_2.setVisible(True)
+            self.ui.python_source.setVisible(True)
             self.ui.source_button.setVisible(True)
             self.ui.custom_source_loc.setVisible(True)
 
@@ -298,10 +303,12 @@ support the version used for the pyc""")
             time.sleep(0.3)
             self.ui.progress_bar.reset()
 
-            urlretrieve(url, target_file, reporthook)
-
-            self.extract(target_file,
+            try:
+                urllib.request.urlretrieve(url, target_file, reporthook)
+                self.extract(target_file,
                          os.path.join(os.getcwd(), "portable_python"))
+            except urllib.error.URLError:
+                self.ui.console_output.append("\nError: Network error. Check if you're connected to the internet")
 
     def extract(self, source_zip, target_folder):
         current = 0
@@ -339,7 +346,6 @@ support the version used for the pyc""")
 
     def check_py_v(self, python_folder):
         self.ui.console_output.append("\nChecking Python interpreter version")
-
         check = subprocess.Popen(f'''"{os.path.join(python_folder, 'python')}"''' +
                                  ' -c "import platform;\
                                print(platform.python_version())"',
@@ -385,15 +391,15 @@ Use another Python source""")
             pass
     def get_custom_pysource(self):
         try:
-            self.custom_source = QtWidgets.QFileDialog.getOpenFileName(
+            self.python_folder = QtWidgets.QFileDialog.getOpenFileName(
                 self, "Custom Python Source",filter="python*")[0]
 
-            if(not self.custom_source):
+            if(not self.python_folder):
                 raise FileNotFoundError
             else:
-                self.custom_source = os.path.dirname(self.custom_source)
-                print(self.custom_source)
-                self.check_py_v(self.custom_source)
+                self.python_folder = os.path.dirname(self.python_folder)
+                self.check_py_v(self.python_folder)
+                self.ui.custom_source_loc.setText(self.python_folder)
         except FileNotFoundError:
             pass
 
