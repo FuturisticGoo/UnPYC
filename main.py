@@ -99,28 +99,29 @@ class main(QtWidgets.QMainWindow):
 
     def do_process(self, commands, output, background=False, message=""):
         self.result = []
-        process = subprocess.Popen(
-            commands,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-            encoding='utf-8',
-            errors='replace'
-        )
+        try:
+            process = subprocess.Popen(
+                commands,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.STDOUT,
+                encoding='utf-8',
+            )
 
-        while True:
-            realtime_output = process.stdout.readline()
+            while True:
+                realtime_output = process.stdout.readline()
+                if realtime_output == '' and process.poll() is not None:
+                    break
 
-            if realtime_output == '' and process.poll() is not None:
-                break
-
-            if realtime_output:
-                if(background):
-                    self.result.append(realtime_output.strip())
-                elif(not message):
-                    output.append(realtime_output.strip())
-                else:
-                    pass
-        output.append(message)
+                if realtime_output:
+                    if(background):
+                        self.result.append(realtime_output.strip())
+                    elif(not message):
+                        output.append(realtime_output.strip())
+                    else:
+                        pass
+            output.append(message)
+        except Exception as err:
+            output.append(f"Error: {err}")
 
     def auto_python_source(self):
         self.installed_python = py_source.get_py()
@@ -130,9 +131,9 @@ class main(QtWidgets.QMainWindow):
                 self.py_match = True
 
         if(self.installed_python and self.py_match):
-            self.ui.console_output.append("""Python installation found in \
-system and matches the version used in pyc bytecode magic number.
-No need to download anything.\nSkip Step 2""")
+            self.ui.console_output.append("Python installation found in \
+system and matches the version used in pyc bytecode magic number.\
+\nNo need to download anything.\nSkip Step 2")
             self.ui.step_2.setVisible(True)
             self.ui.python_source.setVisible(True)
             self.ui.download_python.setVisible(False)
@@ -144,9 +145,9 @@ No need to download anything.\nSkip Step 2""")
             self.ui.save_as.setVisible(True)
 
         elif(bundled_PyVersion.startswith(self.py_v[0:3])):
-            self.ui.console_output.append("""The version used in pyc bytecode \
+            self.ui.console_output.append("The version used in pyc bytecode \
 doesn't match any installed Python or no Python installation found, but \
-Python bundled with UnPYC mathces it.""")
+Python bundled with UnPYC matches it.")
             self.ensure_disabled()
             self.ui.step_2.setVisible(True)
             self.ui.python_source.setVisible(True)
@@ -156,10 +157,10 @@ Python bundled with UnPYC mathces it.""")
             self.ui.save_as.setVisible(True)
 
         elif(self.installed_python):
-            self.ui.console_output.append("""Python installation found in \
-system but doesn't match the version used in pyc bytecode magic number.
-Press the Download button to download the portable Python or use a custom \
-source.\nIt will look for previous downloads if any""")
+            self.ui.console_output.append("Python installation found in \
+system but doesn't match the version used in pyc bytecode magic number.\
+\nPress the Download button to download the portable Python or use a custom \
+source.\nIt will look for previous downloads if any")
             self.ensure_disabled()
             self.ui.step_2.setVisible(True)
             self.ui.python_source.setVisible(True)
@@ -173,9 +174,8 @@ source.\nIt will look for previous downloads if any""")
             self.ui.progress_bar.setTextVisible(True)
 
         elif(not self.installed_python):
-            self.ui.console_output.append("""No python installation, download \
-                                             the required Python version or \
-                                             use a custom source.""")
+            self.ui.console_output.append("No python installation, download \
+the required Python version or use a custom source.")
             self.ensure_disabled()
             self.ui.step_2.setVisible(True)
             self.ui.python_source.setVisible(True)
@@ -190,6 +190,9 @@ source.\nIt will look for previous downloads if any""")
 
     def py_source_changed(self):
         if(self.ui.python_source.currentIndex() == 0):
+            self.ui.console_output.append("Press the Download button to \
+download the portable Python or use a custom source.\nIt will look for \
+previous downloads if any")
             self.ensure_disabled()
             self.ui.step_2.setVisible(True)
             self.ui.python_source.setVisible(True)
@@ -197,15 +200,15 @@ source.\nIt will look for previous downloads if any""")
             self.ui.progress_bar.setVisible(True)
         elif(self.ui.python_source.currentIndex() == 1):
             if(self.py_v[0:3] not in self.installed_python):
-                self.ui.console_output.append("""\nError: Installed Python \
-version doesn't match pyc bytecode number""")
+                self.ui.console_output.append("\nError: Installed Python \
+version doesn't match pyc bytecode number")
                 self.ensure_disabled()
                 self.ui.step_2.setVisible(True)
                 self.ui.python_source.setVisible(True)
         elif(self.ui.python_source.currentIndex() == 2):
             if(bundled_PyVersion[0:3] != self.py_v[0:3]):
-                self.ui.console_output.append("""\nError: Bundled Python \
-version doesn't match pyc bytecode number""")
+                self.ui.console_output.append("\nError: Bundled Python \
+version doesn't match pyc bytecode number")
                 self.ensure_disabled()
                 self.ui.step_2.setVisible(True)
                 self.ui.python_source.setVisible(True)
@@ -247,7 +250,7 @@ version doesn't match pyc bytecode number""")
                 self.ui.console_output.append(
                     f"Python Bytecode version {self.py_v}\n")
                 self.ui.console_output.append("\nNo uncompile tool supports\
-                                               Python 3.9 or 3.10 currently.")
+Python 3.9 or 3.10 currently.")
                 self.ensure_disabled()
             else:
                 self.ui.console_output.append(
@@ -269,18 +272,18 @@ version doesn't match pyc bytecode number""")
     def choose_tool(self):
         self.current = self.ui.uncompyle_tools.currentText()
         if(self.py_v[0:3] in ["3.9", "3.10"]):
-            self.ui.console_output.append("""\nNo uncompile tool supports\
-Python 3.9 or 3.10 currently.""")
+            self.ui.console_output.append("\nNo uncompile tool supports\
+Python 3.9 or 3.10 currently.")
             self.ui.uncompyle_button.setEnabled(False)
 
         elif(self.py_v[0:3] in py_support[self.current]):
-            self.ui.console_output.append("""\nThe uncompyle tool supports the\
- pyc version.""")
+            self.ui.console_output.append("\nThe uncompyle tool supports the \
+pyc version.")
             self.ui.uncompyle_button.setEnabled(True)
 
         else:
-            self.ui.console_output.append("""\nThis uncompile tool doesn't \
-support the version used for the pyc""")
+            self.ui.console_output.append("\nThis uncompile tool doesn't \
+support the version used for the pyc")
             self.ui.uncompyle_button.setEnabled(False)
 
     def download_py(self, url):
@@ -326,15 +329,16 @@ Check if you're connected to the internet""")
 
         else:
             self.ui.console_output.append("Extracting")
-            time.sleep(1)
+            time.sleep(0.5)
             self.ui.progress_bar.reset()
             with ZipFile(source_zip) as zf:
                 for i in zf.filelist:
                     total += i.file_size
+
                 for member in zf.namelist():
                     try:
-                        current += (zf.getinfo(member).file_size)
-                        percentage = int((current/total)*100)
+                        current += zf.getinfo(member).file_size
+                        percentage = (current//total)*100
                         self.ui.progress_bar.setValue(percentage)
                         zf.extract(member, target_folder)
                     except Exception as err:
@@ -351,38 +355,43 @@ Check if you're connected to the internet""")
 
     def check_py_v(self, python_folder):
         self.ui.console_output.append("\nChecking Python interpreter version")
-        check = subprocess.Popen(f'''"{os.path.join(python_folder, 'python')}"''' +
-                                 ' -c "import platform;\
-                               print(platform.python_version())"',
-                                 shell=True,
-                                 stdout=subprocess.PIPE,
-                                 stderr=subprocess.PIPE)
-        self.custom_py_v, err = check.communicate()
+        try:
+            check = subprocess.Popen([os.path.join(python_folder, "python"),
+                                     "-c", "import platform;\
+                                     print(platform.python_version())"],
+                                     stdout=subprocess.PIPE,
+                                     stderr=subprocess.PIPE,
+                                     encoding="utf-8")
+            self.custom_py_v = check.communicate()[0]
 
-        if(err):
-            print(err)
-            self.ui.console_output.append("\nFolder doesn't contain Python")
-        else:
-            self.custom_py_v = self.custom_py_v.strip().decode("utf-8")[0:3]
-            self.ui.console_output.append(f"""\nPython interpreter version\
- {self.custom_py_v}""")
+            self.custom_py_v = self.custom_py_v.strip()[0:3]
+            self.ui.console_output.append(f"""\nPython interpreter version \
+{self.custom_py_v}""")
 
             if(self.custom_py_v == self.py_v[0:3]):
-                self.ui.console_output.append("""\nPython interpreter version \
-matches pyc bytecode version.
+                self.ui.console_output.append("""\nPython interpreter \
+version matches pyc bytecode version.
 Proceed to Step 3""")
                 self.ui.step_3.setVisible(True)
                 self.ui.destination_loc.setVisible(True)
                 self.ui.save_as.setVisible(True)
             else:
-                self.ui.console_output.append("""\nPython interpreter version\
- does not matches pyc bytecode version.
+                self.ui.console_output.append("""\nPython interpreter \
+version does not matches pyc bytecode version.
 Use another Python source""")
+                self.ui.step_3.setVisible(False)
+                self.ui.destination_loc.setVisible(False)
+                self.ui.save_as.setVisible(False)
+
+        except OSError as f:
+            self.ui.console_output.append("Error: Folder doesn't contain \
+Python binary")
+            self.ui.console_output.append(f"Error text: {f}")
 
     def save_file(self):
         try:
             self.save_folder = QtWidgets.QFileDialog.getExistingDirectory(
-                self, "Save")
+                self, "Save in Folder")
 
             if(not self.save_folder):
                 raise FileNotFoundError
@@ -398,14 +407,15 @@ Use another Python source""")
     def get_custom_pysource(self):
         try:
             self.python_folder = QtWidgets.QFileDialog.getOpenFileName(
-                self, "Custom Python Source", filter="python*")[0]
+                self, "Locate the Python Binary", filter="python*")[0]
 
             if(not self.python_folder):
                 raise FileNotFoundError
             else:
                 self.python_folder = os.path.dirname(self.python_folder)
-                self.check_py_v(self.python_folder)
                 self.ui.custom_source_loc.setText(self.python_folder)
+                self.check_py_v(self.python_folder)
+
         except FileNotFoundError:
             pass
 
@@ -413,8 +423,8 @@ Use another Python source""")
         c1 = os.path.join(self.python_folder, "python")
         c2 = os.path.join(self.python_folder, "Lib", "site-packages",
                           "uncompyle6", "bin", "uncompile.py")
-        unc_command = f'"{c1}"' + f' "{c2}"' +\
-                      f' -o "{self.save_folder}" "{self.open_file}" '
+        unc_command = [c1, c2, "-o", self.save_folder, self.open_file]
+
         self.ui.console_output.append("\nUncompiling...")
         thread = threading.Thread(target=self.do_process,
                                   args=(unc_command, self.ui.console_output,
