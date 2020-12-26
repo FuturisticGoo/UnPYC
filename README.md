@@ -19,8 +19,7 @@ This is a GUI tool for uncompiling Python bytecode `.pyc` back to `.py` using ex
 ## How to use
 
 Currently, it's Windows only. Download the latest release here, unzip it and open the UnPYC.exe in the folder. The GUI is very straightforward. For most users, this will be the way to do stuff.
-
-![Example GIF](https://github.com/FuturisticGoo/UnPYC/example/example.gif)
+![Example Usage](https://raw.githubusercontent.com/FuturisticGoo/UnPYC/main/example/example.gif)
 
 ## Portable Python
 
