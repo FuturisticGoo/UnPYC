@@ -21,18 +21,19 @@ import time
 
 bundled_PyVersion = platform.python_version()
 
-portable_py_links = {"2.6": r"http://192.168.43.217:666/python_2.6_wu6.zip",
-                     "2.7": r"http://192.168.43.217:666/python_2.7_wu6.zip",
-                     "3.1": r"http://192.168.43.217:666/python_3.1_wu6.zip",
-                     "3.2": r"http://192.168.43.217:666/python_3.2_wu6.zip",
-                     "3.3": r"http://192.168.43.217:666/python_3.3_wu6.zip",
-                     "3.4": r"http://192.168.43.217:666/python_3.4_wu6.zip",
-                     "3.5": r"http://192.168.43.217:666/python_3.5_wu6.zip",
-                     "3.6": r"http://192.168.43.217:666/python_3.6_wu6.zip",
-                     "3.7": r"http://192.168.43.217:666/python_3.7_wu6.zip",
-                     "3.8": r"http://192.168.43.217:666/python_3.8_wu6.zip"}
+portable_py_links = {"2.6": r"https://github.com/FuturisticGoo/portable_python/raw/main/python_2.6_wu6.zip",
+                     "2.7": r"https://github.com/FuturisticGoo/portable_python/raw/main/python_2.7_wu6.zip",
+                     "3.1": r"https://github.com/FuturisticGoo/portable_python/raw/main/python_3.1_wu6.zip",
+                     "3.2": r"https://github.com/FuturisticGoo/portable_python/raw/main/python_3.2_wu6.zip",
+                     "3.3": r"https://github.com/FuturisticGoo/portable_python/raw/main/python_3.3_wu6.zip",
+                     "3.4": r"https://github.com/FuturisticGoo/portable_python/raw/main/python_3.4_wu6.zip",
+                     "3.5": r"https://github.com/FuturisticGoo/portable_python/raw/main/python_3.5_wu6.zip",
+                     "3.6": r"https://github.com/FuturisticGoo/portable_python/raw/main/python_3.6_wu6.zip",
+                     "3.7": r"https://github.com/FuturisticGoo/portable_python/raw/main/python_3.7_wu6.zip",
+                     "3.8": r"https://github.com/FuturisticGoo/portable_python/raw/main/python_3.8_wu6.zip"}
 
-fonts_list = ["antar.ttf", "Bombardment3D.ttf", "BorderBase.ttf", "dignity of labour.ttf"]
+fonts_list = ["antar.ttf", "Bombardment3D.ttf", "BorderBase.ttf",
+              "dignity of labour.ttf"]
 
 rand_font_loc = os.path.join("fonts", fonts_list[random.randint(0, 3)])
 
@@ -87,7 +88,8 @@ class main(QtWidgets.QMainWindow):
         self.ensure_disabled()
 
         self.ui.open_pyc_file.clicked.connect(self.open_pyc)
-        self.ui.python_source.currentIndexChanged.connect(self.py_source_changed)
+        self.ui.python_source.currentIndexChanged.connect(
+                                                        self.py_source_changed)
         self.ui.source_button.clicked.connect(self.get_custom_pysource)
         self.ui.save_as.clicked.connect(self.save_file)
         self.ui.download_python.clicked.connect(self.down_then_extract)
@@ -156,8 +158,8 @@ Python bundled with UnPYC mathces it.""")
         elif(self.installed_python):
             self.ui.console_output.append("""Python installation found in \
 system but doesn't match the version used in pyc bytecode magic number.
-Press the Download button to download the portable Python or use a custom source.
-It will look for previous downloads if any""")
+Press the Download button to download the portable Python or use a custom \
+source.\nIt will look for previous downloads if any""")
             self.ensure_disabled()
             self.ui.step_2.setVisible(True)
             self.ui.python_source.setVisible(True)
@@ -195,13 +197,15 @@ It will look for previous downloads if any""")
             self.ui.progress_bar.setVisible(True)
         elif(self.ui.python_source.currentIndex() == 1):
             if(self.py_v[0:3] not in self.installed_python):
-                self.ui.console_output.append("\nError: Installed Python version doesn't match pyc bytecode number")
+                self.ui.console_output.append("""\nError: Installed Python \
+version doesn't match pyc bytecode number""")
                 self.ensure_disabled()
                 self.ui.step_2.setVisible(True)
                 self.ui.python_source.setVisible(True)
         elif(self.ui.python_source.currentIndex() == 2):
             if(bundled_PyVersion[0:3] != self.py_v[0:3]):
-                self.ui.console_output.append("\nError: Bundled Python version doesn't match pyc bytecode number")
+                self.ui.console_output.append("""\nError: Bundled Python \
+version doesn't match pyc bytecode number""")
                 self.ensure_disabled()
                 self.ui.step_2.setVisible(True)
                 self.ui.python_source.setVisible(True)
@@ -306,9 +310,10 @@ support the version used for the pyc""")
             try:
                 urllib.request.urlretrieve(url, target_file, reporthook)
                 self.extract(target_file,
-                         os.path.join(os.getcwd(), "portable_python"))
+                             os.path.join(os.getcwd(), "portable_python"))
             except urllib.error.URLError:
-                self.ui.console_output.append("\nError: Network error. Check if you're connected to the internet")
+                self.ui.console_output.append("""\nError: Network error. \
+Check if you're connected to the internet""")
 
     def extract(self, source_zip, target_folder):
         current = 0
@@ -389,10 +394,11 @@ Use another Python source""")
 
         except FileNotFoundError:
             pass
+
     def get_custom_pysource(self):
         try:
             self.python_folder = QtWidgets.QFileDialog.getOpenFileName(
-                self, "Custom Python Source",filter="python*")[0]
+                self, "Custom Python Source", filter="python*")[0]
 
             if(not self.python_folder):
                 raise FileNotFoundError
