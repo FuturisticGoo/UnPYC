@@ -46,7 +46,7 @@ This project is under heavy development, so there might be tons of bugs and cras
 ## License
 
 This project is under GPL v3.0 license, but the libraries and resources used here have their own respective licenses. 
-
+Icon by [Icongeek26](https://www.flaticon.com/authors/icongeek26} under CC License
 The license file for the resources like fonts are stored in the same folder.
 
 PyQt5 is licensed under GPL
