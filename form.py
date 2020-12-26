@@ -1,301 +1,262 @@
 # -*- coding: utf-8 -*-
 
-################################################################################
-## Form generated from reading UI file 'form.ui'
-##
-## Created by: Qt User Interface Compiler version 6.0.0
-##
-## WARNING! All changes made in this file will be lost when recompiling UI file!
-################################################################################
+# Form implementation generated from reading ui file 'form.ui'
+#
+# Created by: PyQt5 UI code generator 5.12.3
+#
+# WARNING! All changes made in this file will be lost!
 
-from PySide6.QtCore import *
-from PySide6.QtGui import *
-from PySide6.QtWidgets import *
+
+from PyQt5 import QtCore, QtGui, QtWidgets
 
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
-        if not MainWindow.objectName():
-            MainWindow.setObjectName(u"MainWindow")
+        MainWindow.setObjectName("MainWindow")
         MainWindow.resize(701, 493)
-        font = QFont()
-        font.setFamily(u"Roboto")
+        font = QtGui.QFont()
+        font.setFamily("Roboto")
         font.setPointSize(9)
         MainWindow.setFont(font)
-        self.centralwidget = QWidget(MainWindow)
-        self.centralwidget.setObjectName(u"centralwidget")
-        self.horizontalLayout_8 = QHBoxLayout(self.centralwidget)
-        self.horizontalLayout_8.setObjectName(u"horizontalLayout_8")
-        self.verticalLayout_3 = QVBoxLayout()
-        self.verticalLayout_3.setObjectName(u"verticalLayout_3")
-        self.heading = QLabel(self.centralwidget)
-        self.heading.setObjectName(u"heading")
-        font1 = QFont()
-        font1.setFamily(u"Roboto")
-        font1.setPointSize(40)
-        self.heading.setFont(font1)
-        self.heading.setAlignment(Qt.AlignCenter)
-
+        self.centralwidget = QtWidgets.QWidget(MainWindow)
+        self.centralwidget.setObjectName("centralwidget")
+        self.horizontalLayout_8 = QtWidgets.QHBoxLayout(self.centralwidget)
+        self.horizontalLayout_8.setObjectName("horizontalLayout_8")
+        self.verticalLayout_3 = QtWidgets.QVBoxLayout()
+        self.verticalLayout_3.setObjectName("verticalLayout_3")
+        self.heading = QtWidgets.QLabel(self.centralwidget)
+        font = QtGui.QFont()
+        font.setFamily("Roboto")
+        font.setPointSize(40)
+        self.heading.setFont(font)
+        self.heading.setAlignment(QtCore.Qt.AlignCenter)
+        self.heading.setObjectName("heading")
         self.verticalLayout_3.addWidget(self.heading)
-
-        self.formLayout = QFormLayout()
-        self.formLayout.setObjectName(u"formLayout")
-        self.step_1 = QLabel(self.centralwidget)
-        self.step_1.setObjectName(u"step_1")
-        font2 = QFont()
-        font2.setFamily(u"Roboto Thin")
-        font2.setPointSize(10)
-        self.step_1.setFont(font2)
-
-        self.formLayout.setWidget(0, QFormLayout.LabelRole, self.step_1)
-
-        self.horizontalLayout_2 = QHBoxLayout()
-        self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
-        self.pyc_loc = QLineEdit(self.centralwidget)
-        self.pyc_loc.setObjectName(u"pyc_loc")
-
+        self.formLayout = QtWidgets.QFormLayout()
+        self.formLayout.setObjectName("formLayout")
+        self.step_1 = QtWidgets.QLabel(self.centralwidget)
+        font = QtGui.QFont()
+        font.setFamily("Roboto Thin")
+        font.setPointSize(10)
+        self.step_1.setFont(font)
+        self.step_1.setObjectName("step_1")
+        self.formLayout.setWidget(0, QtWidgets.QFormLayout.LabelRole, self.step_1)
+        self.horizontalLayout_2 = QtWidgets.QHBoxLayout()
+        self.horizontalLayout_2.setObjectName("horizontalLayout_2")
+        self.pyc_loc = QtWidgets.QLineEdit(self.centralwidget)
+        self.pyc_loc.setObjectName("pyc_loc")
         self.horizontalLayout_2.addWidget(self.pyc_loc)
-
-        self.open_pyc_file = QPushButton(self.centralwidget)
-        self.open_pyc_file.setObjectName(u"open_pyc_file")
-        self.open_pyc_file.setFont(font2)
-
+        self.open_pyc_file = QtWidgets.QPushButton(self.centralwidget)
+        font = QtGui.QFont()
+        font.setFamily("Roboto Thin")
+        font.setPointSize(10)
+        self.open_pyc_file.setFont(font)
+        self.open_pyc_file.setObjectName("open_pyc_file")
         self.horizontalLayout_2.addWidget(self.open_pyc_file)
-
-
-        self.formLayout.setLayout(0, QFormLayout.FieldRole, self.horizontalLayout_2)
-
-        self.step_2 = QLabel(self.centralwidget)
-        self.step_2.setObjectName(u"step_2")
+        self.formLayout.setLayout(0, QtWidgets.QFormLayout.FieldRole, self.horizontalLayout_2)
+        self.step_2 = QtWidgets.QLabel(self.centralwidget)
         self.step_2.setEnabled(True)
-        self.step_2.setFont(font2)
-        self.step_2.setAlignment(Qt.AlignHCenter|Qt.AlignTop)
-
-        self.formLayout.setWidget(1, QFormLayout.LabelRole, self.step_2)
-
-        self.verticalLayout = QVBoxLayout()
-        self.verticalLayout.setObjectName(u"verticalLayout")
-        self.python_source = QComboBox(self.centralwidget)
-        self.python_source.addItem("")
-        self.python_source.addItem("")
-        self.python_source.addItem("")
-        self.python_source.addItem("")
-        self.python_source.setObjectName(u"python_source")
+        font = QtGui.QFont()
+        font.setFamily("Roboto Thin")
+        font.setPointSize(10)
+        self.step_2.setFont(font)
+        self.step_2.setAlignment(QtCore.Qt.AlignHCenter|QtCore.Qt.AlignTop)
+        self.step_2.setObjectName("step_2")
+        self.formLayout.setWidget(1, QtWidgets.QFormLayout.LabelRole, self.step_2)
+        self.verticalLayout = QtWidgets.QVBoxLayout()
+        self.verticalLayout.setObjectName("verticalLayout")
+        self.python_source = QtWidgets.QComboBox(self.centralwidget)
         self.python_source.setEnabled(True)
-        self.python_source.setFont(font2)
-
+        font = QtGui.QFont()
+        font.setFamily("Roboto Thin")
+        font.setPointSize(10)
+        self.python_source.setFont(font)
+        self.python_source.setObjectName("python_source")
+        self.python_source.addItem("")
+        self.python_source.addItem("")
+        self.python_source.addItem("")
+        self.python_source.addItem("")
         self.verticalLayout.addWidget(self.python_source)
-
-        self.horizontalLayout = QHBoxLayout()
-        self.horizontalLayout.setObjectName(u"horizontalLayout")
-        self.download_python = QPushButton(self.centralwidget)
-        self.download_python.setObjectName(u"download_python")
+        self.horizontalLayout = QtWidgets.QHBoxLayout()
+        self.horizontalLayout.setObjectName("horizontalLayout")
+        self.download_python = QtWidgets.QPushButton(self.centralwidget)
         self.download_python.setEnabled(True)
-        self.download_python.setFont(font2)
-
+        font = QtGui.QFont()
+        font.setFamily("Roboto Thin")
+        font.setPointSize(10)
+        self.download_python.setFont(font)
+        self.download_python.setObjectName("download_python")
         self.horizontalLayout.addWidget(self.download_python)
-
-        self.progress_bar = QProgressBar(self.centralwidget)
-        self.progress_bar.setObjectName(u"progress_bar")
+        self.progress_bar = QtWidgets.QProgressBar(self.centralwidget)
         self.progress_bar.setEnabled(True)
-        self.progress_bar.setFont(font2)
-        self.progress_bar.setValue(0)
+        font = QtGui.QFont()
+        font.setFamily("Roboto Thin")
+        font.setPointSize(10)
+        self.progress_bar.setFont(font)
+        self.progress_bar.setProperty("value", 0)
         self.progress_bar.setTextVisible(True)
         self.progress_bar.setInvertedAppearance(False)
-
+        self.progress_bar.setObjectName("progress_bar")
         self.horizontalLayout.addWidget(self.progress_bar)
-
-
         self.verticalLayout.addLayout(self.horizontalLayout)
-
-        self.horizontalLayout_6 = QHBoxLayout()
-        self.horizontalLayout_6.setObjectName(u"horizontalLayout_6")
-        self.custom_source_loc = QLineEdit(self.centralwidget)
-        self.custom_source_loc.setObjectName(u"custom_source_loc")
-
+        self.horizontalLayout_6 = QtWidgets.QHBoxLayout()
+        self.horizontalLayout_6.setObjectName("horizontalLayout_6")
+        self.custom_source_loc = QtWidgets.QLineEdit(self.centralwidget)
+        self.custom_source_loc.setObjectName("custom_source_loc")
         self.horizontalLayout_6.addWidget(self.custom_source_loc)
-
-        self.source_button = QPushButton(self.centralwidget)
-        self.source_button.setObjectName(u"source_button")
-
+        self.source_button = QtWidgets.QPushButton(self.centralwidget)
+        self.source_button.setObjectName("source_button")
         self.horizontalLayout_6.addWidget(self.source_button)
-
-
         self.verticalLayout.addLayout(self.horizontalLayout_6)
-
-
-        self.formLayout.setLayout(1, QFormLayout.FieldRole, self.verticalLayout)
-
-        self.step_3 = QLabel(self.centralwidget)
-        self.step_3.setObjectName(u"step_3")
+        self.formLayout.setLayout(1, QtWidgets.QFormLayout.FieldRole, self.verticalLayout)
+        self.step_3 = QtWidgets.QLabel(self.centralwidget)
         self.step_3.setEnabled(True)
-        self.step_3.setFont(font2)
-
-        self.formLayout.setWidget(2, QFormLayout.LabelRole, self.step_3)
-
-        self.horizontalLayout_3 = QHBoxLayout()
-        self.horizontalLayout_3.setObjectName(u"horizontalLayout_3")
-        self.destination_loc = QLineEdit(self.centralwidget)
-        self.destination_loc.setObjectName(u"destination_loc")
+        font = QtGui.QFont()
+        font.setFamily("Roboto Thin")
+        font.setPointSize(10)
+        self.step_3.setFont(font)
+        self.step_3.setObjectName("step_3")
+        self.formLayout.setWidget(2, QtWidgets.QFormLayout.LabelRole, self.step_3)
+        self.horizontalLayout_3 = QtWidgets.QHBoxLayout()
+        self.horizontalLayout_3.setObjectName("horizontalLayout_3")
+        self.destination_loc = QtWidgets.QLineEdit(self.centralwidget)
         self.destination_loc.setEnabled(True)
-        self.destination_loc.setFont(font2)
-
+        font = QtGui.QFont()
+        font.setFamily("Roboto Thin")
+        font.setPointSize(10)
+        self.destination_loc.setFont(font)
+        self.destination_loc.setObjectName("destination_loc")
         self.horizontalLayout_3.addWidget(self.destination_loc)
-
-        self.save_as = QPushButton(self.centralwidget)
-        self.save_as.setObjectName(u"save_as")
+        self.save_as = QtWidgets.QPushButton(self.centralwidget)
         self.save_as.setEnabled(True)
-        self.save_as.setFont(font2)
-
+        font = QtGui.QFont()
+        font.setFamily("Roboto Thin")
+        font.setPointSize(10)
+        self.save_as.setFont(font)
+        self.save_as.setObjectName("save_as")
         self.horizontalLayout_3.addWidget(self.save_as)
-
-
-        self.formLayout.setLayout(2, QFormLayout.FieldRole, self.horizontalLayout_3)
-
-
+        self.formLayout.setLayout(2, QtWidgets.QFormLayout.FieldRole, self.horizontalLayout_3)
         self.verticalLayout_3.addLayout(self.formLayout)
-
-        self.advanced_container = QVBoxLayout()
-        self.advanced_container.setObjectName(u"advanced_container")
-        self.horizontalLayout_5 = QHBoxLayout()
-        self.horizontalLayout_5.setObjectName(u"horizontalLayout_5")
-        self.advanced = QPushButton(self.centralwidget)
-        self.advanced.setObjectName(u"advanced")
+        self.advanced_container = QtWidgets.QVBoxLayout()
+        self.advanced_container.setObjectName("advanced_container")
+        self.horizontalLayout_5 = QtWidgets.QHBoxLayout()
+        self.horizontalLayout_5.setObjectName("horizontalLayout_5")
+        self.advanced = QtWidgets.QPushButton(self.centralwidget)
         self.advanced.setEnabled(True)
-        self.advanced.setFont(font2)
+        font = QtGui.QFont()
+        font.setFamily("Roboto Thin")
+        font.setPointSize(10)
+        self.advanced.setFont(font)
         self.advanced.setFlat(True)
-
+        self.advanced.setObjectName("advanced")
         self.horizontalLayout_5.addWidget(self.advanced)
-
-        self.horizontalSpacer = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
-
-        self.horizontalLayout_5.addItem(self.horizontalSpacer)
-
-
+        spacerItem = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        self.horizontalLayout_5.addItem(spacerItem)
         self.advanced_container.addLayout(self.horizontalLayout_5)
-
-        self.widget = QWidget(self.centralwidget)
-        self.widget.setObjectName(u"widget")
+        self.widget = QtWidgets.QWidget(self.centralwidget)
         self.widget.setEnabled(True)
-        self.verticalLayout_2 = QVBoxLayout(self.widget)
-        self.verticalLayout_2.setObjectName(u"verticalLayout_2")
-        self.horizontalLayout_4 = QHBoxLayout()
-        self.horizontalLayout_4.setObjectName(u"horizontalLayout_4")
-        self.uncompyle_tool_label = QLabel(self.widget)
-        self.uncompyle_tool_label.setObjectName(u"uncompyle_tool_label")
+        self.widget.setObjectName("widget")
+        self.verticalLayout_2 = QtWidgets.QVBoxLayout(self.widget)
+        self.verticalLayout_2.setObjectName("verticalLayout_2")
+        self.horizontalLayout_4 = QtWidgets.QHBoxLayout()
+        self.horizontalLayout_4.setObjectName("horizontalLayout_4")
+        self.uncompyle_tool_label = QtWidgets.QLabel(self.widget)
         self.uncompyle_tool_label.setEnabled(True)
-        self.uncompyle_tool_label.setFont(font2)
-
+        font = QtGui.QFont()
+        font.setFamily("Roboto Thin")
+        font.setPointSize(10)
+        self.uncompyle_tool_label.setFont(font)
+        self.uncompyle_tool_label.setObjectName("uncompyle_tool_label")
         self.horizontalLayout_4.addWidget(self.uncompyle_tool_label)
-
-        self.uncompyle_tools = QComboBox(self.widget)
-        self.uncompyle_tools.addItem("")
-        self.uncompyle_tools.addItem("")
-        self.uncompyle_tools.addItem("")
-        self.uncompyle_tools.addItem("")
-        self.uncompyle_tools.addItem("")
-        self.uncompyle_tools.addItem("")
-        self.uncompyle_tools.addItem("")
-        self.uncompyle_tools.addItem("")
-        self.uncompyle_tools.setObjectName(u"uncompyle_tools")
+        self.uncompyle_tools = QtWidgets.QComboBox(self.widget)
         self.uncompyle_tools.setEnabled(True)
-        sizePolicy = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Fixed)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.uncompyle_tools.sizePolicy().hasHeightForWidth())
         self.uncompyle_tools.setSizePolicy(sizePolicy)
-        self.uncompyle_tools.setFont(font2)
-
+        font = QtGui.QFont()
+        font.setFamily("Roboto Thin")
+        font.setPointSize(10)
+        self.uncompyle_tools.setFont(font)
+        self.uncompyle_tools.setObjectName("uncompyle_tools")
+        self.uncompyle_tools.addItem("")
+        self.uncompyle_tools.addItem("")
+        self.uncompyle_tools.addItem("")
+        self.uncompyle_tools.addItem("")
+        self.uncompyle_tools.addItem("")
+        self.uncompyle_tools.addItem("")
+        self.uncompyle_tools.addItem("")
+        self.uncompyle_tools.addItem("")
         self.horizontalLayout_4.addWidget(self.uncompyle_tools)
-
-
         self.verticalLayout_2.addLayout(self.horizontalLayout_4)
-
-
         self.advanced_container.addWidget(self.widget)
-
-
         self.verticalLayout_3.addLayout(self.advanced_container)
-
-        self.horizontalLayout_7 = QHBoxLayout()
-        self.horizontalLayout_7.setObjectName(u"horizontalLayout_7")
-        self.space_left_uncompyle = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
-
-        self.horizontalLayout_7.addItem(self.space_left_uncompyle)
-
-        self.uncompyle_button = QPushButton(self.centralwidget)
-        self.uncompyle_button.setObjectName(u"uncompyle_button")
+        self.horizontalLayout_7 = QtWidgets.QHBoxLayout()
+        self.horizontalLayout_7.setObjectName("horizontalLayout_7")
+        spacerItem1 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        self.horizontalLayout_7.addItem(spacerItem1)
+        self.uncompyle_button = QtWidgets.QPushButton(self.centralwidget)
         self.uncompyle_button.setEnabled(True)
-        self.uncompyle_button.setFont(font2)
-
+        font = QtGui.QFont()
+        font.setFamily("Roboto Thin")
+        font.setPointSize(10)
+        self.uncompyle_button.setFont(font)
+        self.uncompyle_button.setObjectName("uncompyle_button")
         self.horizontalLayout_7.addWidget(self.uncompyle_button)
-
-        self.space_right_uncompyle = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
-
-        self.horizontalLayout_7.addItem(self.space_right_uncompyle)
-
-
+        spacerItem2 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        self.horizontalLayout_7.addItem(spacerItem2)
         self.verticalLayout_3.addLayout(self.horizontalLayout_7)
-
-
         self.horizontalLayout_8.addLayout(self.verticalLayout_3)
-
-        self.console_output = QTextEdit(self.centralwidget)
-        self.console_output.setObjectName(u"console_output")
-        font3 = QFont()
-        font3.setFamily(u"Terminal")
-        font3.setPointSize(12)
-        self.console_output.setFont(font3)
-        self.console_output.setFrameShape(QFrame.StyledPanel)
-        self.console_output.setFrameShadow(QFrame.Sunken)
-        self.console_output.setVerticalScrollBarPolicy(Qt.ScrollBarAsNeeded)
-        self.console_output.setSizeAdjustPolicy(QAbstractScrollArea.AdjustToContentsOnFirstShow)
+        self.console_output = QtWidgets.QTextEdit(self.centralwidget)
+        font = QtGui.QFont()
+        font.setFamily("Terminal")
+        font.setPointSize(12)
+        self.console_output.setFont(font)
+        self.console_output.setFrameShape(QtWidgets.QFrame.StyledPanel)
+        self.console_output.setFrameShadow(QtWidgets.QFrame.Sunken)
+        self.console_output.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAsNeeded)
+        self.console_output.setSizeAdjustPolicy(QtWidgets.QAbstractScrollArea.AdjustToContentsOnFirstShow)
         self.console_output.setUndoRedoEnabled(False)
         self.console_output.setReadOnly(True)
-
+        self.console_output.setObjectName("console_output")
         self.horizontalLayout_8.addWidget(self.console_output)
-
         MainWindow.setCentralWidget(self.centralwidget)
-        self.menubar = QMenuBar(MainWindow)
-        self.menubar.setObjectName(u"menubar")
-        self.menubar.setGeometry(QRect(0, 0, 701, 21))
+        self.menubar = QtWidgets.QMenuBar(MainWindow)
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 701, 21))
+        self.menubar.setObjectName("menubar")
         MainWindow.setMenuBar(self.menubar)
-        self.statusbar = QStatusBar(MainWindow)
-        self.statusbar.setObjectName(u"statusbar")
+        self.statusbar = QtWidgets.QStatusBar(MainWindow)
+        self.statusbar.setObjectName("statusbar")
         MainWindow.setStatusBar(self.statusbar)
 
         self.retranslateUi(MainWindow)
-
-        QMetaObject.connectSlotsByName(MainWindow)
-    # setupUi
+        QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
-        MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"UnPYC", None))
-        self.heading.setText(QCoreApplication.translate("MainWindow", u"UnPYC", None))
-        self.step_1.setText(QCoreApplication.translate("MainWindow", u"Step 1", None))
-        self.open_pyc_file.setText(QCoreApplication.translate("MainWindow", u"Open .pyc file", None))
-        self.step_2.setText(QCoreApplication.translate("MainWindow", u"Step 2", None))
-        self.python_source.setItemText(0, QCoreApplication.translate("MainWindow", u"Download portable python (recommended)", None))
-        self.python_source.setItemText(1, QCoreApplication.translate("MainWindow", u"Use currently installed python", None))
-        self.python_source.setItemText(2, QCoreApplication.translate("MainWindow", u"Use UnPYC bundled python", None))
-        self.python_source.setItemText(3, QCoreApplication.translate("MainWindow", u"Custom source (advanced)", None))
-
-        self.download_python.setText(QCoreApplication.translate("MainWindow", u"Download", None))
-        self.source_button.setText(QCoreApplication.translate("MainWindow", u"Python Source", None))
-        self.step_3.setText(QCoreApplication.translate("MainWindow", u"Step 3", None))
-        self.destination_loc.setText(QCoreApplication.translate("MainWindow", u"Destination file", None))
-        self.save_as.setText(QCoreApplication.translate("MainWindow", u"Save in folder", None))
-        self.advanced.setText(QCoreApplication.translate("MainWindow", u"Advanced \u25b6", None))
-        self.uncompyle_tool_label.setText(QCoreApplication.translate("MainWindow", u"Uncompile tool", None))
-        self.uncompyle_tools.setItemText(0, QCoreApplication.translate("MainWindow", u"rocky/uncompyle6 (1.0-3.8) (default)", None))
-        self.uncompyle_tools.setItemText(1, QCoreApplication.translate("MainWindow", u"zrax/pycdc (2.7 - 3.3)", None))
-        self.uncompyle_tools.setItemText(2, QCoreApplication.translate("MainWindow", u"rocky/decompile3 (3.7+)", None))
-        self.uncompyle_tools.setItemText(3, QCoreApplication.translate("MainWindow", u"wibiti/uncompyle2 (2.7)", None))
-        self.uncompyle_tools.setItemText(4, QCoreApplication.translate("MainWindow", u"figment/unpyc3 (3.3)", None))
-        self.uncompyle_tools.setItemText(5, QCoreApplication.translate("MainWindow", u"andrew-tavera/unpyc37 (3.7)", None))
-        self.uncompyle_tools.setItemText(6, QCoreApplication.translate("MainWindow", u"unpyc3 (3.2)", None))
-        self.uncompyle_tools.setItemText(7, QCoreApplication.translate("MainWindow", u"gtarnberger/uncompyle (2.7)", None))
-
-        self.uncompyle_button.setText(QCoreApplication.translate("MainWindow", u"Umcompyle!", None))
-    # retranslateUi
-
+        _translate = QtCore.QCoreApplication.translate
+        MainWindow.setWindowTitle(_translate("MainWindow", "UnPYC"))
+        self.heading.setText(_translate("MainWindow", "UnPYC"))
+        self.step_1.setText(_translate("MainWindow", "Step 1"))
+        self.open_pyc_file.setText(_translate("MainWindow", "Open .pyc file"))
+        self.step_2.setText(_translate("MainWindow", "Step 2"))
+        self.python_source.setItemText(0, _translate("MainWindow", "Download portable python (recommended)"))
+        self.python_source.setItemText(1, _translate("MainWindow", "Use currently installed python"))
+        self.python_source.setItemText(2, _translate("MainWindow", "Use UnPYC bundled python"))
+        self.python_source.setItemText(3, _translate("MainWindow", "Custom source (advanced)"))
+        self.download_python.setText(_translate("MainWindow", "Download"))
+        self.source_button.setText(_translate("MainWindow", "Python Source"))
+        self.step_3.setText(_translate("MainWindow", "Step 3"))
+        self.destination_loc.setText(_translate("MainWindow", "Destination file"))
+        self.save_as.setText(_translate("MainWindow", "Save in folder"))
+        self.advanced.setText(_translate("MainWindow", "Advanced ▶"))
+        self.uncompyle_tool_label.setText(_translate("MainWindow", "Uncompile tool"))
+        self.uncompyle_tools.setItemText(0, _translate("MainWindow", "rocky/uncompyle6 (1.0-3.8) (default)"))
+        self.uncompyle_tools.setItemText(1, _translate("MainWindow", "zrax/pycdc (2.7 - 3.3)"))
+        self.uncompyle_tools.setItemText(2, _translate("MainWindow", "rocky/decompile3 (3.7+)"))
+        self.uncompyle_tools.setItemText(3, _translate("MainWindow", "wibiti/uncompyle2 (2.7)"))
+        self.uncompyle_tools.setItemText(4, _translate("MainWindow", "figment/unpyc3 (3.3)"))
+        self.uncompyle_tools.setItemText(5, _translate("MainWindow", "andrew-tavera/unpyc37 (3.7)"))
+        self.uncompyle_tools.setItemText(6, _translate("MainWindow", "unpyc3 (3.2)"))
+        self.uncompyle_tools.setItemText(7, _translate("MainWindow", "gtarnberger/uncompyle (2.7)"))
+        self.uncompyle_button.setText(_translate("MainWindow", "Umcompyle!"))

@@ -41,7 +41,7 @@ There's a lot of stuff to do in this, like
 * More user friendly UI
 * Cleanup after usage
 
-This project is under heavy development, so there might be tons of bugs and crashes.
+This project is under heavy development, so there might be tons of bugs and crashes. Also, the console isn't hidden right now, so that errors can be seen there.
 
 ## License
 
@@ -49,4 +49,4 @@ This project is under GPL v3.0 license, but the libraries and resources used her
 
 The license file for the resources like fonts are stored in the same folder.
 
-PySide6 is licensed under LGPL
+PyQt5 is licensed under GPL

@@ -2,3 +2,6 @@ PYCS/
 portable_python/
 __pycache__/
 form.ui
+dist/
+build/
+main.spec

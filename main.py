@@ -5,7 +5,7 @@ Created on Mon Dec 21 09:54:50 2020
 @author: FuturisticGoo
 """
 
-from PySide6 import QtWidgets, QtGui
+from PyQt5 import QtWidgets, QtGui
 from form import Ui_MainWindow
 import qt_material
 import random
@@ -16,7 +16,7 @@ import py_source
 import platform
 from zipfile import ZipFile
 import os
-import urllib
+from urllib import request, error
 import time
 
 bundled_PyVersion = platform.python_version()
@@ -308,10 +308,10 @@ support the version used for the pyc""")
             self.ui.progress_bar.reset()
 
             try:
-                urllib.request.urlretrieve(url, target_file, reporthook)
+                request.urlretrieve(url, target_file, reporthook)
                 self.extract(target_file,
                              os.path.join(os.getcwd(), "portable_python"))
-            except urllib.error.URLError:
+            except error.URLError:
                 self.ui.console_output.append("""\nError: Network error. \
 Check if you're connected to the internet""")
 
