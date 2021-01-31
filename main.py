@@ -4,33 +4,48 @@ Created on Mon Dec 21 09:54:50 2020
 
 @author: FuturisticGoo
 """
+# Hey there random stranger! Have a nice day.
 
 from PyQt5 import QtWidgets, QtGui
-from form import Ui_MainWindow
+from modules import magic, py_source
+from modules.form import Ui_MainWindow
+from modules.settings import Ui_Settings
+from modules.how_to_use import Ui_HowToUse
+from modules.about import Ui_About
 import qt_material
 import random
 import subprocess
 import threading
-import magic
-import py_source
 import platform
+import shutil
 from zipfile import ZipFile
 import os
 from urllib import request, error
 import time
 
 bundled_PyVersion = platform.python_version()
+portable_git_link = r"https://github.com/FuturisticGoo/portable_python/raw/main/py_distros/"
 
-portable_py_links = {"2.6": r"https://github.com/FuturisticGoo/portable_python/raw/main/python_2.6_wu6.zip",
-                     "2.7": r"https://github.com/FuturisticGoo/portable_python/raw/main/python_2.7_wu6.zip",
-                     "3.1": r"https://github.com/FuturisticGoo/portable_python/raw/main/python_3.1_wu6.zip",
-                     "3.2": r"https://github.com/FuturisticGoo/portable_python/raw/main/python_3.2_wu6.zip",
-                     "3.3": r"https://github.com/FuturisticGoo/portable_python/raw/main/python_3.3_wu6.zip",
-                     "3.4": r"https://github.com/FuturisticGoo/portable_python/raw/main/python_3.4_wu6.zip",
-                     "3.5": r"https://github.com/FuturisticGoo/portable_python/raw/main/python_3.5_wu6.zip",
-                     "3.6": r"https://github.com/FuturisticGoo/portable_python/raw/main/python_3.6_wu6.zip",
-                     "3.7": r"https://github.com/FuturisticGoo/portable_python/raw/main/python_3.7_wu6.zip",
-                     "3.8": r"https://github.com/FuturisticGoo/portable_python/raw/main/python_3.8_wu6.zip"}
+portable_py_links = {"2.6": [portable_git_link+"python_2.6_wu6.zip",
+                             portable_git_link+"python_2.6_wpsw_wu6.zip"],
+                     "2.7": [portable_git_link+"python_2.7_wu6.zip",
+                             portable_git_link+"python_2.7_wpsw_wu6.zip"],
+                     "3.1": [portable_git_link+"python_3.1_wu6.zip",
+                             portable_git_link+"python_3.1_wpsw_wu6.zip"],
+                     "3.2": [portable_git_link+"python_3.2_wu6.zip",
+                             portable_git_link+"python_3.2_wpsw_wu6.zip"],
+                     "3.3": [portable_git_link+"python_3.3_wu6.zip",
+                             portable_git_link+"python_3.3_wpsw_wu6.zip"],
+                     "3.4": [portable_git_link+"python_3.4_wu6.zip",
+                             portable_git_link+"python_3.4_wpsw_wu6.zip"],
+                     "3.5": [portable_git_link+"python_3.5_wu6.zip",
+                             portable_git_link+"python_3.5_wpsw_wu6.zip"],
+                     "3.6": [portable_git_link+"python_3.6_wu6.zip",
+                             portable_git_link+"python_3.6_wpsw_wu6.zip"],
+                     "3.7": [portable_git_link+"python_3.7_wu6.zip",
+                             portable_git_link+"python_3.7_wpsw_wu6.zip"],
+                     "3.8": [portable_git_link+"python_3.8_wu6.zip",
+                             portable_git_link+"python_3.8_wpsw_wu6.zip"]}
 
 fonts_list = ["antar.ttf", "Bombardment3D.ttf", "BorderBase.ttf",
               "dignity of labour.ttf"]
@@ -55,12 +70,49 @@ py_support = {"rocky/uncompyle6 (1.0-3.8) (default)": ["1.0", "1.2", "1.3",
               }
 
 
+class Settings(QtWidgets.QDialog):
+    def __init__(self):
+        super(Settings, self).__init__()
+        self.ui = Ui_Settings()
+        self.ui.setupUi(self)
+        self.ui.clear_button.clicked.connect(self.clear_py)
+
+    def clear_py(self):
+
+        if(os.path.exists(os.path.join(os.getcwd(), "portable_python"))):
+            self.ui.clear_button.setText("Clearing...")
+
+            def clear_it():
+                shutil.rmtree(os.path.join(os.getcwd(), "portable_python"))
+                self.ui.clear_button.setText("Cleared!")
+            clear = threading.Thread(target=clear_it)
+            clear.start()
+
+        else:
+            self.ui.clear_button.setText("Cleared!")
+
+
+class About(QtWidgets.QDialog):
+    def __init__(self):
+        super(About, self).__init__()
+        self.ui = Ui_About()
+        self.ui.setupUi(self)
+
+
+class HowToUse(QtWidgets.QDialog):
+    def __init__(self):
+        super(HowToUse, self).__init__()
+        self.ui = Ui_HowToUse()
+        self.ui.setupUi(self)
+
+
 class main(QtWidgets.QMainWindow):
 
     def ensure_disabled(self):
         self.ui.step_2.setVisible(False)
         self.ui.python_source.setVisible(False)
         self.ui.download_python.setVisible(False)
+        self.ui.wpsw_check.setVisible(False)
         self.ui.progress_bar.reset()
         self.ui.progress_bar.setVisible(False)
         self.ui.custom_source_loc.setVisible(False)
@@ -77,6 +129,7 @@ class main(QtWidgets.QMainWindow):
         super(main, self).__init__()
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
+        self.installed_python = py_source.get_py()
         font_id = QtGui.QFontDatabase.addApplicationFont(rand_font_loc)
         font_family = QtGui.QFontDatabase.applicationFontFamilies(font_id)[0]
         heading_font = QtGui.QFont(font_family)
@@ -96,6 +149,21 @@ class main(QtWidgets.QMainWindow):
         self.ui.advanced.clicked.connect(self.advanced_vis)
         self.ui.uncompyle_tools.currentIndexChanged.connect(self.choose_tool)
         self.ui.uncompyle_button.clicked.connect(self.uncompile)
+        self.ui.actionSettings.triggered.connect(self.settings)
+        self.ui.actionHow_to_use.triggered.connect(self.how_to_use)
+        self.ui.actionAbout.triggered.connect(self.about)
+
+    def about(self):
+        about_dialog = About()
+        about_dialog.exec_()
+
+    def how_to_use(self):
+        how_to_use_dialog = HowToUse()
+        how_to_use_dialog.exec_()
+
+    def settings(self):
+        settings_dialog = Settings()
+        settings_dialog.exec_()
 
     def do_process(self, commands, output, background=False, message=""):
         self.result = []
@@ -124,11 +192,14 @@ class main(QtWidgets.QMainWindow):
             output.append(f"Error: {err}")
 
     def auto_python_source(self):
-        self.installed_python = py_source.get_py()
         self.py_match = False
         for version in self.installed_python:
             if(version.startswith(self.py_v[0:3])):
                 self.py_match = True
+                self.python_folder = os.path.dirname(
+                    self.installed_python[version])
+                self.python_binary = self.installed_python[version]
+                break
 
         if(self.installed_python and self.py_match):
             self.ui.console_output.append("Python installation found in \
@@ -160,7 +231,8 @@ Python bundled with UnPYC matches it.")
             self.ui.console_output.append("Python installation found in \
 system but doesn't match the version used in pyc bytecode magic number.\
 \nPress the Download button to download the portable Python or use a custom \
-source.\nIt will look for previous downloads if any")
+source.\nIt will look for previous downloads if any.\nTick the checkbox if you\
+ plan on using uncompile tools other than uncompyle6")
             self.ensure_disabled()
             self.ui.step_2.setVisible(True)
             self.ui.python_source.setVisible(True)
@@ -171,11 +243,13 @@ source.\nIt will look for previous downloads if any")
             self.ui.save_as.setVisible(False)
             self.ui.download_python.setVisible(True)
             self.ui.progress_bar.setVisible(True)
+            self.ui.wpsw_check.setVisible(True)
             self.ui.progress_bar.setTextVisible(True)
 
         elif(not self.installed_python):
             self.ui.console_output.append("No python installation, download \
-the required Python version or use a custom source.")
+the required Python version or use a custom source.\nTick the checkbox if you \
+plan on using uncompile tools other than uncompyle6")
             self.ensure_disabled()
             self.ui.step_2.setVisible(True)
             self.ui.python_source.setVisible(True)
@@ -186,25 +260,35 @@ the required Python version or use a custom source.")
             self.ui.save_as.setVisible(False)
             self.ui.download_python.setVisible(True)
             self.ui.progress_bar.setVisible(True)
+            self.ui.wpsw_check.setVisible(True)
             self.ui.progress_bar.setTextVisible(True)
 
     def py_source_changed(self):
         if(self.ui.python_source.currentIndex() == 0):
             self.ui.console_output.append("Press the Download button to \
 download the portable Python or use a custom source.\nIt will look for \
-previous downloads if any")
+previous downloads if any\nTick the checkbox if you plan on using uncompile \
+tools other than uncompyle6")
             self.ensure_disabled()
             self.ui.step_2.setVisible(True)
             self.ui.python_source.setVisible(True)
             self.ui.download_python.setVisible(True)
             self.ui.progress_bar.setVisible(True)
+            self.ui.wpsw_check.setVisible(True)
         elif(self.ui.python_source.currentIndex() == 1):
-            if(self.py_v[0:3] not in self.installed_python):
+            if(not self.py_match):
                 self.ui.console_output.append("\nError: Installed Python \
 version doesn't match pyc bytecode number")
                 self.ensure_disabled()
                 self.ui.step_2.setVisible(True)
                 self.ui.python_source.setVisible(True)
+            else:
+                self.ensure_disabled()
+                self.ui.step_2.setVisible(True)
+                self.ui.python_source.setVisible(True)
+                self.ui.step_3.setVisible(True)
+                self.ui.destination_loc.setVisible(True)
+                self.ui.save_as.setVisible(True)
         elif(self.ui.python_source.currentIndex() == 2):
             if(bundled_PyVersion[0:3] != self.py_v[0:3]):
                 self.ui.console_output.append("\nError: Bundled Python \
@@ -249,7 +333,7 @@ version doesn't match pyc bytecode number")
             elif(self.py_v[0:3] in ["3.9", "3.10"]):
                 self.ui.console_output.append(
                     f"Python Bytecode version {self.py_v}\n")
-                self.ui.console_output.append("\nNo uncompile tool supports\
+                self.ui.console_output.append("\nNo uncompile tool supports \
 Python 3.9 or 3.10 currently.")
                 self.ensure_disabled()
             else:
@@ -303,7 +387,7 @@ support the version used for the pyc")
         else:
             def reporthook(blocknum, blocksize, totalsize):
                 readsofar = blocknum * blocksize
-                percent = int(readsofar * 100 / totalsize)
+                percent = int(readsofar*100/totalsize)
                 self.ui.progress_bar.setValue(percent)
 
             self.ui.console_output.append("\nDownloading portable python")
@@ -323,6 +407,7 @@ Check if you're connected to the internet""")
         total = 0
         self.python_folder = os.path.join(
             target_folder, "python_"+self.py_v[0:3])
+        self.python_binary = os.path.join(self.python_folder, "python")
         if(os.path.exists(self.python_folder)):
             self.ui.console_output.append("Zip already extracted")
             self.check_py_v(self.python_folder)
@@ -338,7 +423,7 @@ Check if you're connected to the internet""")
                 for member in zf.namelist():
                     try:
                         current += zf.getinfo(member).file_size
-                        percentage = (current//total)*100
+                        percentage = int(current*100/total)
                         self.ui.progress_bar.setValue(percentage)
                         zf.extract(member, target_folder)
                     except Exception as err:
@@ -349,14 +434,19 @@ Check if you're connected to the internet""")
             self.check_py_v(self.python_folder)
 
     def down_then_extract(self):
+        if (self.ui.wpsw_check.isChecked()):
+            url = portable_py_links[self.py_v[0:3]][1]
+        else:
+            url = portable_py_links[self.py_v[0:3]][0]
+
         down = threading.Thread(target=self.download_py,
-                                args=(portable_py_links[self.py_v[0:3]],))
+                                args=(url,))
         down.start()
 
     def check_py_v(self, python_folder):
         self.ui.console_output.append("\nChecking Python interpreter version")
         try:
-            check = subprocess.Popen([os.path.join(python_folder, "python"),
+            check = subprocess.Popen([self.python_binary,
                                      "-c", "import platform;\
                                      print(platform.python_version())"],
                                      stdout=subprocess.PIPE,
@@ -406,13 +496,14 @@ Python binary")
 
     def get_custom_pysource(self):
         try:
-            self.python_folder = QtWidgets.QFileDialog.getOpenFileName(
-                self, "Locate the Python Binary", filter="python*")[0]
+            self.python_binary = QtWidgets.QFileDialog.getOpenFileName(
+                self, "Locate the Python Installation Folder",
+                filter="python*")[0]
 
-            if(not self.python_folder):
+            if(not self.python_binary):
                 raise FileNotFoundError
             else:
-                self.python_folder = os.path.dirname(self.python_folder)
+                self.python_folder = os.path.dirname(self.python_binary)
                 self.ui.custom_source_loc.setText(self.python_folder)
                 self.check_py_v(self.python_folder)
 
@@ -420,16 +511,24 @@ Python binary")
             pass
 
     def uncompile(self):
-        c1 = os.path.join(self.python_folder, "python")
-        c2 = os.path.join(self.python_folder, "Lib", "site-packages",
-                          "uncompyle6", "bin", "uncompile.py")
-        unc_command = [c1, c2, "-o", self.save_folder, self.open_file]
 
-        self.ui.console_output.append("\nUncompiling...")
-        thread = threading.Thread(target=self.do_process,
-                                  args=(unc_command, self.ui.console_output,
-                                        False, "\nUncompiling finished!"))
-        thread.start()
+        uncompyle_py_source = os.path.join(self.python_folder,
+                                           "Lib", "site-packages",
+                                           "uncompyle6", "bin", "uncompile.py")
+        if(os.path.exists(uncompyle_py_source)):
+            unc_command = [self.python_binary, uncompyle_py_source, "-o",
+                           self.save_folder, self.open_file]
+            self.ui.console_output.append("\nUncompiling...")
+            thread = threading.Thread(target=self.do_process,
+                                      args=(unc_command,
+                                            self.ui.console_output, False,
+                                            "\nUncompiling finished!"))
+            thread.start()
+        else:
+            self.ui.console_output.append(f"""\nUncompyle6 not installed in \
+the current python location. Please install uncompyle6 for \
+{self.python_binary} using
+pip install uncompyle6""")
 
 
 if not QtWidgets.QApplication.instance():
