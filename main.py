@@ -7,7 +7,8 @@ Created on Mon Dec 21 09:54:50 2020
 # Hey there random stranger! Have a nice day.
 
 from PyQt5 import QtWidgets, QtGui
-from modules import magic, py_source
+from PyQt5.QtCore import QProcess
+from modules import magic, py_source, pyinstxtractor
 from modules.form import Ui_MainWindow
 from modules.settings import Ui_Settings
 from modules.how_to_use import Ui_HowToUse
@@ -18,14 +19,15 @@ import subprocess
 import threading
 import platform
 import shutil
-from zipfile import ZipFile
+from zipfile import ZipFile, BadZipFile
 import os
 from urllib import request, error
 import time
+import sys
 
 bundled_PyVersion = platform.python_version()
-portable_git_link = r"https://github.com/FuturisticGoo/portable_python/raw/main/py_distros/"
-
+#portable_git_link = r"https://github.com/FuturisticGoo/portable_python/raw/main/py_distros/"
+portable_git_link = r"http://[::1]:666/"
 portable_py_links = {"2.6": [portable_git_link+"python_2.6_wu6.zip",
                              portable_git_link+"python_2.6_wpsw_wu6.zip"],
                      "2.7": [portable_git_link+"python_2.7_wu6.zip",
@@ -125,21 +127,54 @@ class main(QtWidgets.QMainWindow):
         self.ui.uncompyle_tools.setVisible(False)
         self.ui.uncompyle_button.setVisible(False)
 
+    def getting_sources(self):
+        self.ui.console_output.append("""Finding Python installations in \
+system, please wait...""")
+        self.ui.radio_pyc.setVisible(False)
+        self.ui.radio_pyinstaller.setVisible(False)
+        self.ui.step_1.setVisible(False)
+        self.ui.pyc_loc.setVisible(False)
+        self.ui.open_pyc_file.setVisible(False)
+        self.installed_python = py_source.get_py()
+        self.ui.radio_pyc.setVisible(True)
+        self.ui.radio_pyinstaller.setVisible(True)
+        self.ui.step_1.setVisible(True)
+        self.ui.pyc_loc.setVisible(True)
+        self.ui.open_pyc_file.setVisible(True)
+        self.ui.console_output.append(f"""Finished. Found \
+{len(self.installed_python)} installations""")
+
     def __init__(self):
         super(main, self).__init__()
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
-        self.installed_python = py_source.get_py()
+        py_thread = threading.Thread(target=self.getting_sources)
+        py_thread.start()
+        self.p = None
         font_id = QtGui.QFontDatabase.addApplicationFont(rand_font_loc)
         font_family = QtGui.QFontDatabase.applicationFontFamilies(font_id)[0]
         heading_font = QtGui.QFont(font_family)
         heading_font.setPointSize(40)
-        console_font = QtGui.QFont("Arial")
-        console_font.setPointSize(8)
+        console_font = QtGui.QFont()
+        console_font.setPointSize(9)
+        self.ensure_disabled()
         self.ui.console_output.setFont(console_font)
         self.ui.heading.setFont(heading_font)
-        self.ensure_disabled()
 
+        def pyinstaller_radio():
+            self.ui.open_pyc_file.setText("Open Pyinstaller executable")
+            self.ui.console_output.setText("")
+            self.ui.pyc_loc.setText("Source File")
+            self.ensure_disabled()
+
+        def pyc_radio():
+            self.ui.open_pyc_file.setText("Open pyc/pyo file")
+            self.ui.console_output.setText("")
+            self.ui.pyc_loc.setText("Source File")
+            self.ensure_disabled()
+
+        self.ui.radio_pyinstaller.clicked.connect(pyinstaller_radio)
+        self.ui.radio_pyc.clicked.connect(pyc_radio)
         self.ui.open_pyc_file.clicked.connect(self.open_pyc)
         self.ui.python_source.currentIndexChanged.connect(
                                                         self.py_source_changed)
@@ -165,31 +200,28 @@ class main(QtWidgets.QMainWindow):
         settings_dialog = Settings()
         settings_dialog.exec_()
 
-    def do_process(self, commands, output, background=False, message=""):
-        self.result = []
-        try:
-            process = subprocess.Popen(
-                commands,
-                stdout=subprocess.PIPE,
-                stderr=subprocess.STDOUT,
-                encoding='utf-8',
-            )
+    def do_process(self, commands, output):
 
-            while True:
-                realtime_output = process.stdout.readline()
-                if realtime_output == '' and process.poll() is not None:
-                    break
+        def handle_stdout():
+            data = self.p.readAllStandardOutput()
+            stdout = bytes(data).decode("utf8")
+            output.append(stdout)
 
-                if realtime_output:
-                    if(background):
-                        self.result.append(realtime_output.strip())
-                    elif(not message):
-                        output.append(realtime_output.strip())
-                    else:
-                        pass
-            output.append(message)
-        except Exception as err:
-            output.append(f"Error: {err}")
+        def handle_stderr():
+            data = self.p.readAllStandardError()
+            stderr = bytes(data).decode("utf8")
+            output.append(f"Error: {stderr}")
+
+        def process_finished():
+            self.p = None
+
+        if self.p is None:  # No process running.
+            self.p = QProcess()
+            self.p.readyReadStandardOutput.connect(handle_stdout)
+            self.p.readyReadStandardError.connect(handle_stderr)
+            # Clean up once complete.
+            self.p.finished.connect(process_finished)
+            self.p.start(*commands)
 
     def auto_python_source(self):
         self.py_match = False
@@ -202,23 +234,30 @@ class main(QtWidgets.QMainWindow):
                 break
 
         if(self.installed_python and self.py_match):
-            self.ui.console_output.append("Python installation found in \
-system and matches the version used in pyc bytecode magic number.\
-\nNo need to download anything.\nSkip Step 2")
+            self.ui.console_output.append("""Python installation found in \
+system and matches the version used in pyc bytecode magic number.
+No need to download anything.\nSkip Step 2""")
             self.ui.step_2.setVisible(True)
             self.ui.python_source.setVisible(True)
             self.ui.download_python.setVisible(False)
             self.ui.progress_bar.setVisible(False)
             self.ui.python_source.setCurrentText(
                 "Use currently installed python")
-            self.ui.step_3.setVisible(True)
-            self.ui.destination_loc.setVisible(True)
-            self.ui.save_as.setVisible(True)
+            if(self.ui.radio_pyc.isChecked()):
+                self.ui.step_3.setVisible(True)
+                self.ui.destination_loc.setVisible(True)
+                self.ui.save_as.setVisible(True)
+            else:
+                self.ui.uncompyle_button.setVisible(True)
+                self.ui.uncompyle_button.setText("Extract!")
+                self.ui.step_3.setVisible(False)
+                self.ui.destination_loc.setVisible(False)
+                self.ui.save_as.setVisible(False)
 
         elif(bundled_PyVersion.startswith(self.py_v[0:3])):
-            self.ui.console_output.append("The version used in pyc bytecode \
+            self.ui.console_output.append("""The version used in pyc bytecode \
 doesn't match any installed Python or no Python installation found, but \
-Python bundled with UnPYC matches it.")
+Python bundled with UnPYC matches it.""")
             self.ensure_disabled()
             self.ui.step_2.setVisible(True)
             self.ui.python_source.setVisible(True)
@@ -228,11 +267,11 @@ Python bundled with UnPYC matches it.")
             self.ui.save_as.setVisible(True)
 
         elif(self.installed_python):
-            self.ui.console_output.append("Python installation found in \
-system but doesn't match the version used in pyc bytecode magic number.\
-\nPress the Download button to download the portable Python or use a custom \
-source.\nIt will look for previous downloads if any.\nTick the checkbox if you\
- plan on using uncompile tools other than uncompyle6")
+            self.ui.console_output.append("""Python installation found in \
+system but doesn't match the version used in pyc bytecode magic number.
+Press the Download button to download the portable Python or use a custom \
+source.\nIt will look for previous downloads if any.\nTick the checkbox if \
+you plan on using uncompile tools other than uncompyle6""")
             self.ensure_disabled()
             self.ui.step_2.setVisible(True)
             self.ui.python_source.setVisible(True)
@@ -247,9 +286,9 @@ source.\nIt will look for previous downloads if any.\nTick the checkbox if you\
             self.ui.progress_bar.setTextVisible(True)
 
         elif(not self.installed_python):
-            self.ui.console_output.append("No python installation, download \
+            self.ui.console_output.append("""No python installation, download \
 the required Python version or use a custom source.\nTick the checkbox if you \
-plan on using uncompile tools other than uncompyle6")
+plan on using uncompile tools other than uncompyle6""")
             self.ensure_disabled()
             self.ui.step_2.setVisible(True)
             self.ui.python_source.setVisible(True)
@@ -265,10 +304,10 @@ plan on using uncompile tools other than uncompyle6")
 
     def py_source_changed(self):
         if(self.ui.python_source.currentIndex() == 0):
-            self.ui.console_output.append("Press the Download button to \
+            self.ui.console_output.append("""Press the Download button to \
 download the portable Python or use a custom source.\nIt will look for \
 previous downloads if any\nTick the checkbox if you plan on using uncompile \
-tools other than uncompyle6")
+tools other than uncompyle6""")
             self.ensure_disabled()
             self.ui.step_2.setVisible(True)
             self.ui.python_source.setVisible(True)
@@ -277,8 +316,8 @@ tools other than uncompyle6")
             self.ui.wpsw_check.setVisible(True)
         elif(self.ui.python_source.currentIndex() == 1):
             if(not self.py_match):
-                self.ui.console_output.append("\nError: Installed Python \
-version doesn't match pyc bytecode number")
+                self.ui.console_output.append("""\nError: Installed Python \
+version doesn't match pyc bytecode number""")
                 self.ensure_disabled()
                 self.ui.step_2.setVisible(True)
                 self.ui.python_source.setVisible(True)
@@ -286,13 +325,21 @@ version doesn't match pyc bytecode number")
                 self.ensure_disabled()
                 self.ui.step_2.setVisible(True)
                 self.ui.python_source.setVisible(True)
+            if(self.ui.radio_pyc.isChecked()):
                 self.ui.step_3.setVisible(True)
                 self.ui.destination_loc.setVisible(True)
                 self.ui.save_as.setVisible(True)
+            else:
+                self.ui.uncompyle_button.setVisible(True)
+                self.ui.uncompyle_button.setText("Extract!")
+                self.ui.step_3.setVisible(False)
+                self.ui.destination_loc.setVisible(False)
+                self.ui.save_as.setVisible(False)
+
         elif(self.ui.python_source.currentIndex() == 2):
             if(bundled_PyVersion[0:3] != self.py_v[0:3]):
-                self.ui.console_output.append("\nError: Bundled Python \
-version doesn't match pyc bytecode number")
+                self.ui.console_output.append("""\nError: Bundled Python \
+version doesn't match pyc bytecode number""")
                 self.ensure_disabled()
                 self.ui.step_2.setVisible(True)
                 self.ui.python_source.setVisible(True)
@@ -306,14 +353,23 @@ version doesn't match pyc bytecode number")
     def open_pyc(self):
         self.ensure_disabled()
         try:
-            self.open_file = QtWidgets.QFileDialog.getOpenFileName(
-                self, "Open PYC file", filter="*.pyc")[0]
+            if(self.ui.radio_pyc.isChecked()):
+                self.open_file = QtWidgets.QFileDialog.getOpenFileName(
+                    self, "Open pyc/pyo file",
+                    filter="Python bytecode(*.pyc *.pyo)")[0]
+            else:
+                self.open_file = QtWidgets.QFileDialog.getOpenFileName(
+                    self, "Open pyinstaller executable file")[0]
             if(not self.open_file):
                 raise FileNotFoundError
             self.ui.destination_loc.setText("")
             self.ui.console_output.setText("")
             self.ui.pyc_loc.setText(self.open_file)
-            self.py_v = magic.get_magic(self.open_file)
+            if(self.ui.radio_pyc.isChecked()):
+                self.py_v = magic.get_magic(self.open_file)
+            else:
+                sys.argv = ["pyinstxtractor.py", self.open_file]
+                self.py_v = pyinstxtractor.main()
 
             if(self.py_v == "Error:1"):
                 self.ui.console_output.append(
@@ -329,12 +385,14 @@ version doesn't match pyc bytecode number")
             elif(self.py_v == "Error:4"):
                 self.ui.console_output.append("Unknown error")
                 self.ensure_disabled()
-
+            elif(self.py_v is None):
+                self.ui.console_output.append("""File might not be \
+pyinstaller file or it might be corrupt""")
             elif(self.py_v[0:3] in ["3.9", "3.10"]):
                 self.ui.console_output.append(
                     f"Python Bytecode version {self.py_v}\n")
-                self.ui.console_output.append("\nNo uncompile tool supports \
-Python 3.9 or 3.10 currently.")
+                self.ui.console_output.append("""\nNo uncompile tool supports \
+Python 3.9 or 3.10 currently.""")
                 self.ensure_disabled()
             else:
                 self.ui.console_output.append(
@@ -356,18 +414,18 @@ Python 3.9 or 3.10 currently.")
     def choose_tool(self):
         self.current = self.ui.uncompyle_tools.currentText()
         if(self.py_v[0:3] in ["3.9", "3.10"]):
-            self.ui.console_output.append("\nNo uncompile tool supports\
-Python 3.9 or 3.10 currently.")
+            self.ui.console_output.append("""\nNo uncompile tool supports\
+Python 3.9 or 3.10 currently.""")
             self.ui.uncompyle_button.setEnabled(False)
 
         elif(self.py_v[0:3] in py_support[self.current]):
-            self.ui.console_output.append("\nThe uncompyle tool supports the \
-pyc version.")
+            self.ui.console_output.append("""\nThe uncompyle tool supports \
+the pyc version.""")
             self.ui.uncompyle_button.setEnabled(True)
 
         else:
-            self.ui.console_output.append("\nThis uncompile tool doesn't \
-support the version used for the pyc")
+            self.ui.console_output.append("""\nThis uncompile tool doesn't \
+support the version used for the pyc""")
             self.ui.uncompyle_button.setEnabled(False)
 
     def download_py(self, url):
@@ -419,7 +477,6 @@ Check if you're connected to the internet""")
             with ZipFile(source_zip) as zf:
                 for i in zf.filelist:
                     total += i.file_size
-
                 for member in zf.namelist():
                     try:
                         current += zf.getinfo(member).file_size
@@ -429,7 +486,6 @@ Check if you're connected to the internet""")
                     except Exception as err:
                         print(err)
                         self.ui.console_output.append(err)
-
             self.ui.console_output.append("Finished extraction")
             self.check_py_v(self.python_folder)
 
@@ -459,12 +515,27 @@ Check if you're connected to the internet""")
 {self.custom_py_v}""")
 
             if(self.custom_py_v == self.py_v[0:3]):
-                self.ui.console_output.append("""\nPython interpreter \
+                if(self.ui.radio_pyc.isChecked()):
+                    self.ui.console_output.append("""\nPython interpreter \
 version matches pyc bytecode version.
 Proceed to Step 3""")
-                self.ui.step_3.setVisible(True)
-                self.ui.destination_loc.setVisible(True)
-                self.ui.save_as.setVisible(True)
+                    self.ui.uncompyle_button.setText("Uncompyle!")
+                    self.ui.step_3.setVisible(True)
+                    self.ui.destination_loc.setVisible(True)
+                    self.ui.save_as.setVisible(True)
+                else:
+                    self.ui.console_output.append("""\nPython interpreter \
+version matches pyc bytecode version.
+Proceed to extract.""")
+                    self.ui.uncompyle_button.setVisible(True)
+                    self.ui.uncompyle_button.setText("Extract!")
+                    self.ui.step_3.setVisible(False)
+                    self.ui.destination_loc.setVisible(False)
+                    self.ui.save_as.setVisible(False)
+                    self.ui.advanced.setVisible(False)
+                    self.ui.uncompyle_tool_label.setVisible(False)
+                    self.ui.uncompyle_tools.setVisible(False)
+                    self.ui.uncompyle_button.setVisible(True)
             else:
                 self.ui.console_output.append("""\nPython interpreter \
 version does not matches pyc bytecode version.
@@ -511,24 +582,33 @@ Python binary")
             pass
 
     def uncompile(self):
+        if(self.ui.radio_pyc.isChecked()):
+            uncompyle_py_source = os.path.join(self.python_folder,
+                                               "Lib", "site-packages",
+                                               "uncompyle6", "bin",
+                                               "uncompile.py")
+            if(os.path.exists(uncompyle_py_source)):
+                unc_command = (self.python_binary, [uncompyle_py_source, "-o",
+                               self.save_folder, self.open_file])
+                self.ui.console_output.append("\nUncompiling...")
+                self.do_process(unc_command, self.ui.console_output)
+            else:
+                self.ui.console_output.append(f"""\nUncompyle6 not installed \
+in the current python location. Please install uncompyle6 for \
+{self.python_binary} using pip install uncompyle6""")
 
-        uncompyle_py_source = os.path.join(self.python_folder,
-                                           "Lib", "site-packages",
-                                           "uncompyle6", "bin", "uncompile.py")
-        if(os.path.exists(uncompyle_py_source)):
-            unc_command = [self.python_binary, uncompyle_py_source, "-o",
-                           self.save_folder, self.open_file]
-            self.ui.console_output.append("\nUncompiling...")
-            thread = threading.Thread(target=self.do_process,
-                                      args=(unc_command,
-                                            self.ui.console_output, False,
-                                            "\nUncompiling finished!"))
-            thread.start()
         else:
-            self.ui.console_output.append(f"""\nUncompyle6 not installed in \
-the current python location. Please install uncompyle6 for \
-{self.python_binary} using
-pip install uncompyle6""")
+            py_extractor_source = os.path.join(os.getcwd(), "modules",
+                                               "pyinstxtractor.py")
+            if(os.path.exists(py_extractor_source)):
+                unc_command = (self.python_binary, [py_extractor_source,
+                               self.open_file])
+                self.ui.console_output.append("\nExtracting...")
+                self.do_process(unc_command, self.ui.console_output)
+            else:
+                self.ui.console_output.append("""\npyinstxractor.py script \
+not found in modules folder or python source is not valid. Redownload the \
+UnPYC program or check the source for defects.""")
 
 
 if not QtWidgets.QApplication.instance():
@@ -536,6 +616,6 @@ if not QtWidgets.QApplication.instance():
 else:
     app = QtWidgets.QApplication.instance()
 win = main()
-qt_material.apply_stylesheet(app, theme="dark_teal.xml")
+qt_material.apply_stylesheet(app, theme="dark_cyan.xml")
 win.show()
 app.exec_()

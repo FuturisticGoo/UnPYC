@@ -2,11 +2,15 @@
 
 ## Overview
 
-This is a GUI tool for decompiling Python bytecode `.pyc` back to `.py` using existing tools.
+This is a GUI tool for decompiling Python bytecode `.pyc/.pyo` back to `.py` using existing tools.   
+
+It's also bundled with a modified [pyinstxtractor](https://github.com/extremecoders-re/pyinstxtractor/) for making it easy to extract pyinstaller packaged executables. 
 
 ## Features
 
 * Can decompile Python bytecode versions `2.6, 2.7, 3.1, 3.2, 3.3, 3.4, 3.5, 3.6, 3.7, 3.8`, using tools like [uncompyle6](https://github.com/rocky/python-uncompyle6).
+
+* Can extract pyinstaller package using pyinstxtractor.
 
 * Makes it easy to decompile pyc's even without Python installed in the system.
 
@@ -18,7 +22,9 @@ This is a GUI tool for decompiling Python bytecode `.pyc` back to `.py` using ex
 
 ## How to use
 
-Currently, it's Windows only. Download the latest release here, unzip it and open the UnPYC.exe in the folder. The GUI is very straightforward. For most users, this will be the way to do stuff.
+Currently, it's Windows only. Download the latest release here, unzip it and open the UnPYC.exe in the folder. The GUI is very straightforward. For most users, this will be the way to do stuff.  
+
+This is an example of extracting a pyinstaller packaged .exe and decompiling the bytecode stored in it.
 
 ![Example Usage](https://raw.githubusercontent.com/FuturisticGoo/UnPYC/main/example/example.gif)
 
@@ -45,8 +51,8 @@ This project is under development, so there might be tons of bugs and crashes. A
 
 ## License
 
-This project is under GPL v3.0 license, but the libraries and resources used here have their own respective licenses. 
-Icon by [Icongeek26](https://www.flaticon.com/authors/icongeek26} under CC License
+This project is under GPL v3.0 license, but the libraries and resources used here have their own respective licenses.   
+Icon by [Icongeek26](https://www.flaticon.com/authors/icongeek26} under CC License  
 The license file for the resources like fonts are stored in the same folder.
 
 PyQt5 is licensed under GPL

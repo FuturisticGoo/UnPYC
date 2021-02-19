@@ -1,6 +1,7 @@
 __pycache__/
 build/
 dist/
+Example files/
 main.build/
 main.dist/
 modules/__pycache__/
