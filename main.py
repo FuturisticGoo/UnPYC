@@ -26,8 +26,7 @@ import time
 import sys
 
 bundled_PyVersion = platform.python_version()
-#portable_git_link = r"https://github.com/FuturisticGoo/portable_python/raw/main/py_distros/"
-portable_git_link = r"http://[::1]:666/"
+portable_git_link = r"https://github.com/FuturisticGoo/portable_python/raw/main/py_distros/"
 portable_py_links = {"2.6": [portable_git_link+"python_2.6_wu6.zip",
                              portable_git_link+"python_2.6_wpsw_wu6.zip"],
                      "2.7": [portable_git_link+"python_2.7_wu6.zip",
@@ -52,7 +51,7 @@ portable_py_links = {"2.6": [portable_git_link+"python_2.6_wu6.zip",
 fonts_list = ["antar.ttf", "Bombardment3D.ttf", "BorderBase.ttf",
               "dignity of labour.ttf"]
 
-rand_font_loc = os.path.join("fonts", fonts_list[random.randint(0, 3)])
+rand_font_loc = os.path.join(os.getcwd(), "fonts", fonts_list[random.randint(0, 3)])
 
 py_support = {"rocky/uncompyle6 (1.0-3.8) (default)": ["1.0", "1.2", "1.3",
                                                        "1.4", "1.5", "1.6",
