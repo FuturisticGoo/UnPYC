@@ -2,6 +2,8 @@
 
 ## Overview
 
+*Important: I won't push more updates to this tool, since it was merely a hobby + learning project.*
+
 This is a GUI tool for decompiling Python bytecode `.pyc/.pyo` back to `.py` using existing tools.   
 
 It's also bundled with a modified [pyinstxtractor](https://github.com/extremecoders-re/pyinstxtractor/) for making it easy to extract pyinstaller packaged executables. 
@@ -27,6 +29,8 @@ Currently, it's Windows only. Download the latest release here, unzip it and ope
 This is an example of extracting a pyinstaller packaged .exe and decompiling the bytecode stored in it.
 
 ![Example Usage](https://raw.githubusercontent.com/FuturisticGoo/UnPYC/main/example/example.gif)
+
+> You can change the theme from the settings menu.
 
 ## Portable Python
 

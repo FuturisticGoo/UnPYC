@@ -25,6 +25,7 @@ import sys
 
 bundled_PyVersion = platform.python_version()
 portable_git_link = r"https://github.com/FuturisticGoo/portable_python/raw/main/py_distros/"
+#portable_git_link = "http://127.0.0.1:8000/"  # For testing
 portable_py_links = {"2.6": [portable_git_link+"python_2.6_wu6.zip",
                              portable_git_link+"python_2.6_wpsw_wu6.zip"],
                      "2.7": [portable_git_link+"python_2.7_wu6.zip",
