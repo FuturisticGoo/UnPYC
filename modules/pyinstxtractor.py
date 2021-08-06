@@ -240,9 +240,9 @@ class PyInstArchive:
             f.write(data)
 
 
-    def extractFiles(self):
+    def extractFiles(self, ext_folder):
         print('[+] Beginning extraction...please standby')
-        extractionDir = self.filePath + '_extracted'
+        extractionDir = os.path.join(ext_folder, os.path.basename(self.filePath) + '_extracted')
 
         if not os.path.exists(extractionDir):
             os.mkdir(extractionDir)
@@ -379,7 +379,7 @@ def main():
                 x = arch.getCArchiveInfo()
                 if x == True:
                     arch.parseTOC()
-                    arch.extractFiles()
+                    arch.extractFiles(sys.argv[2])
                     arch.close()
                     print('[+] Successfully extracted pyinstaller archive: {0}'.format(sys.argv[1]))
                     print('')

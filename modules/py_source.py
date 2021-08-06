@@ -24,14 +24,17 @@ def get_py():
             process = subprocess.Popen([temp_version, "-c",
                                        "import platform;print(platform.python_version())"],
                                        shell=True,
+                                       encoding="UTF-8",
                                        stdout=subprocess.PIPE,
                                        stderr=subprocess.PIPE)
             process.wait()
             python_version, err = process.communicate()
-            python_version = python_version.decode("UTF-8").strip()
+            python_version = python_version.strip()
             process = subprocess.Popen([find_cmd, f"python{version}"],
+                                       encoding="UTF-8",
+                                       shell=True,
                                        stdout=subprocess.PIPE)
-            python_path = process.communicate()[0].decode("UTF-8").strip()
+            python_path = process.communicate()[0].strip()
             if(python_version == ""):
                 continue
             all_sources[python_version] = python_path

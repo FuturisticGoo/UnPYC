@@ -1,3 +1,4 @@
+.pylint.d/
 __pycache__/
 build/
 dist/
@@ -10,6 +11,7 @@ modules/convert_ui_to_py.bat
 modules/form.ui
 modules/how_to_use.ui
 modules/settings.ui
+modules/custom_widget.py
 portable_python/
 PYCS/
 main.spec
